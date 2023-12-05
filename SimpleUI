@@ -1,0 +1,108 @@
+package pack;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
+
+public class SimpleUI extends JFrame 
+    private JTextArea textArea;
+
+    public SimpleUI() 
+        setTitle("Simple UI");
+        setSize(400, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Menu Bar
+        JMenuBar menuBar = new JMenuBar();
+        setJMenuBar(menuBar);
+
+        // File Menu
+        JMenu fileMenu = new JMenu("File");
+        menuBar.add(fileMenu);
+
+        // Menu Items
+        JMenuItem printDateTimeItem = new JMenuItem("Print Date and Time");
+        JMenuItem writeToLogFileItem = new JMenuItem("Write to log.txt");
+        JMenuItem changeBackgroundColorItem = new JMenuItem("Change Background Color");
+        JMenuItem exitItem = new JMenuItem("Exit");
+
+        fileMenu.add(printDateTimeItem);
+        fileMenu.add(writeToLogFileItem);
+        fileMenu.add(changeBackgroundColorItem);
+        fileMenu.addSeparator();
+        fileMenu.add(exitItem);
+
+        // Text Area
+        textArea = new JTextArea();
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        add(scrollPane, BorderLayout.CENTER);
+
+        // Event Listeners
+        printDateTimeItem.addActionListener(new ActionListener() 
+            @Override
+            public void actionPerformed(ActionEvent e) 
+                printDateTime();
+
+        );
+
+        writeToLogFileItem.addActionListener(new ActionListener() 
+            @Override
+            public void actionPerformed(ActionEvent e) 
+                writeToLogFile();
+
+        );
+
+        changeBackgroundColorItem.addActionListener(new ActionListener() 
+            @Override
+            public void actionPerformed(ActionEvent e) 
+                changeBackgroundColor();
+
+        );
+
+        exitItem.addActionListener(new ActionListener() 
+            @Override
+            public void actionPerformed(ActionEvent e) 
+                System.exit(0);
+
+        );
+
+
+    private void printDateTime() 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateTime = dateFormat.format(new Date());
+        textArea.append("Date and Time: "  dateTime  "\n");
+
+
+    private void writeToLogFile() 
+        String content = textArea.getText();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("log.txt"))) 
+            writer.write(content);
+            JOptionPane.showMessageDialog(this, "Content written to log.txt successfully");
+         catch (IOException e) 
+            JOptionPane.showMessageDialog(this, "Error writing to log.txt: "  e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+
+
+    private void changeBackgroundColor() 
+        // Generate random shade of green
+        Random random = new Random();
+        int green = random.nextInt(256);
+        Color color = new Color(0, green, 0);
+        textArea.setBackground(color);
+
+
+    public static void main(String[] args) 
+        SwingUtilities.invokeLater(new Runnable() 
+            @Override
+            public void run() 
+                SimpleUI simpleUI = new SimpleUI();
+                simpleUI.setVisible(true);
+
+        );
+
